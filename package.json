@@ -1,6 +1,6 @@
 {
   "name": "rxstore-jest",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Testing rxstore libraries with jest",
   "main": "dist/main.js",
   "typings": "dist/main.d.ts",

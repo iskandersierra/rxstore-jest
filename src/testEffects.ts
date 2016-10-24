@@ -49,6 +49,7 @@ export const testUpdateEffects =
             const promise = store.update$
               .timeout(timeout)
               .catch(err => Observable.empty<StateUpdate<TState>>())
+              .takeLast(count)
               .toArray()
               .toPromise() as PromiseLike<StateUpdate<TState>[]>;
 
@@ -84,6 +85,7 @@ export const testActionEffects =
             const promise = store.action$
               .timeout(timeout)
               .catch(err => Observable.empty<Action>())
+              .takeLast(count)
               .toArray()
               .toPromise() as PromiseLike<Action[]>;
 
@@ -119,6 +121,7 @@ export const testStateEffects =
             const promise = store.state$
               .timeout(timeout)
               .catch(err => Observable.empty<TState>())
+              .takeLast(count)
               .toArray()
               .toPromise() as PromiseLike<TState[]>;
 
