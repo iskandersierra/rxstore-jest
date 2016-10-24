@@ -4,11 +4,11 @@ import 'jest';
 require("babel-core/register");
 require("babel-polyfill");
 
-import { ActionInstanceMapping } from "rxstore";
+import { ActionDescriptionMapping } from "rxstore";
 import { ActionsTestConfig, ExpectedActionsDescription } from "./interfaces";
 
 export const testActions = <TState>(
-  current: ActionInstanceMapping<TState>,
+  current: ActionDescriptionMapping<TState>,
   description: string,
   expected: ExpectedActionsDescription<TState>
 ) => {
@@ -60,20 +60,20 @@ export const testActions = <TState>(
             () => expect(typeof currentAction.reducer).toBe("function"));
           if (currentAction.reducer) {
             if (expectedAction.kind === "empty" && currentAction.kind === "empty") {
-              expectedAction.samples.forEach((sample, index) => {
+              expectedAction.samples!.forEach((sample, index) => {
                 const caption = sample.caption || `#${index + 1}`;
                 it(`it's reducer should reduce correctly sample ${caption}`,
                   () => {
-                    const result = currentAction.reducer(sample.source);
+                    const result = currentAction.reducer!(sample.source);
                     expect(result).toEqual(sample.target);
                   });
               });
             } else if (expectedAction.kind === "typed" && currentAction.kind === "typed") {
-              expectedAction.samples.forEach((sample, index) => {
+              expectedAction.samples!.forEach((sample, index) => {
                 const caption = sample.caption || `#${index + 1}`;
                 it(`it's reducer should reduce correctly sample ${caption}`,
                   () => {
-                    const result = currentAction.reducer(sample.source, sample.payload);
+                    const result = currentAction.reducer!(sample.source, sample.payload);
                     expect(result).toEqual(sample.target);
                   });
               });

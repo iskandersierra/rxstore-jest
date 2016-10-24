@@ -1,6 +1,6 @@
 {
   "name": "rxstore-jest",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Testing rxstore libraries with jest",
   "main": "dist/main.js",
   "typings": "dist/main.d.ts",
@@ -15,10 +15,10 @@
     "build": "webpack || echo not ok",
     "test": "npm run test:watch",
     "test:once": "jest",
-    "test:watch": "jest --watch",
+    "test:watch": "jest --watchAll",
     "coverage": "npm run coverage:watch",
     "coverage:once": "jest --coverage --no-cache",
-    "coverage:watch": "jest --coverage --watch --no-cache",
+    "coverage:watch": "jest --coverage --watchAll --no-cache",
     "prerelease": "npm run build && npm run coverage:once",
     "release": "standard-version && npm pack"
   },
@@ -80,5 +80,9 @@
       "js",
       "json"
     ]
+  },
+  "dependencies": {
+    "@types/deep-equal": "0.0.30",
+    "deep-equal": "^1.0.1"
   }
 }
