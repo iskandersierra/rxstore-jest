@@ -1,6 +1,6 @@
 "use strict";
 
-import 'jest';
+import "jest";
 require("babel-core/register");
 require("babel-polyfill");
 
@@ -16,7 +16,7 @@ describe("expectedActions", () => {
   });    // Sanity checks
 
   describe("Given an empty expected actions", () => {
-    const expectations = expectedActions("a namespace", () => { });
+    const expectations = expectedActions("a namespace", () => { return; });
     it("it should be non-null", () =>
       expect(typeof expectations).toBe("object"));
     it("it should be as expected", () =>
@@ -42,15 +42,13 @@ describe("expectedActions", () => {
           kind: "empty",
           name: "emptyOne",
           type: "EMPTY_ACTION",
-          samples: [{ caption: "empty caption", source: 1, target: 2 }]
+          samples: [{ caption: "empty caption", source: 1, target: 2 }],
         }, {
           kind: "typed",
           name: "typedOne",
           type: "TYPED_ACTION",
-          samples: [{ caption: "typed caption", source: 1, payload: "hello", target: 6 }]
+          samples: [{ caption: "typed caption", source: 1, payload: "hello", target: 6 }],
         }],
       }));
   });    // Given an empty expected actions
-
-
 });    // expectedActions

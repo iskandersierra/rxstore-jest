@@ -1,6 +1,6 @@
 "use strict";
 
-import 'jest';
+import "jest";
 require("babel-core/register");
 require("babel-polyfill");
 
@@ -14,4 +14,3 @@ describe("testActions", () => {
       () => expect(typeof testActions).toBe("function"));
   }); //    Sanity checks
 }); //    testActions
-

@@ -1,6 +1,6 @@
 "use strict";
 
-import 'jest';
+import "jest";
 require("babel-core/register");
 require("babel-polyfill");
 

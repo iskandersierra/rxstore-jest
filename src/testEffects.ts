@@ -21,7 +21,6 @@ import "rxjs/add/operator/toPromise";
 import { reassign, Store, Action, StoreActions, StateUpdate, startEffects } from "rxstore";
 import * as deepEqual from "deep-equal";
 
-
 const actionsToObservable = (acts: Action[] | Observable<Action>) =>
   Array.isArray(acts) ? Observable.of(...acts) : acts;
 

@@ -1,29 +1,37 @@
 "use strict";
 
-import { ActionsTestConfig, ExpectedActionsDescription } from "./interfaces";
+import {
+  ActionsTestConfig, ExpectedActionsDescription,
+  ExpectedEmptyActionDescription, ExpectedTypedActionDescription,
+  EmptyActionConfig, TypedActionConfig,
+} from "./interfaces";
 
 export const expectedActions = <TState>(
   nameSpace: string,
   actionConfig: (config: ActionsTestConfig<TState>) => void
 ): ExpectedActionsDescription<TState> => {
-  let actions = [];
+  let actions: (ExpectedEmptyActionDescription<TState> | ExpectedTypedActionDescription<TState>)[] = [];
   const empty = (name: string, type: string) => {
-    let action = { kind: "empty", name, type, samples: [] };
+    let action: ExpectedEmptyActionDescription<TState> = {
+      kind: "empty", name, type, samples: [],
+    };
     actions.push(action);
-    const result = {
+    const result: EmptyActionConfig<TState> = {
       withSample: (source, target, caption?) => {
-        action.samples.push({ source, target, caption });
+        action.samples!.push({ source, target, caption });
         return result;
       },
     };
     return result;
   };
   const typed = (name: string, type: string) => {
-    let action = { kind: "typed", name, type, samples: [] };
+    let action: ExpectedTypedActionDescription<TState> = {
+      kind: "typed", name, type, samples: [],
+    };
     actions.push(action);
-    const result = {
+    const result: TypedActionConfig<TState> = {
       withSample: (source, payload, target, caption?) => {
-        action.samples.push({ source, payload, target, caption });
+        action.samples!.push({ source, payload, target, caption });
         return result;
       },
     };
