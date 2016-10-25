@@ -4,12 +4,6 @@
   "description": "Testing rxstore libraries with jest",
   "main": "dist/main.js",
   "typings": "dist/main.d.ts",
-  "jam": {
-    "main": "./dist/main.browser.js"
-  },
-  "browser": {
-    "dist/main.js": "./dist/main.browser.js"
-  },
   "scripts": {
     "prebuild": "npm install",
     "build": "webpack || echo not ok",

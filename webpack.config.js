@@ -52,7 +52,7 @@ var percentage_handler = function handler(percentage, msg) {
 		console.log("Build started... Good luck!");
 	} else if (1 == percentage) {
 		// TODO: No Error detection. :(
-		create_browser_version(webpack_opts.output.filename);
+		// create_browser_version(webpack_opts.output.filename);
 
 		// Invokes dts bundling
 		console.log("Bundling d.ts files ...");
