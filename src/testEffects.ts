@@ -26,7 +26,7 @@ import * as deepEqual from "deep-equal";
 
 export interface TestEffectsOptions<TState, TStore extends Store<TState>, TResult> {
   caption: string;
-  prologue?: string[];
+  prologue?: string | string[];
   store: TStore | (() => TStore);
   assess: Observable<TResult> | ((store: TStore) => Observable<TResult>);
   prepare?: Action[] | Observable<Action> | ((store: TStore) => (Action[] | Observable<Action>));
@@ -37,7 +37,7 @@ export interface TestEffectsOptions<TState, TStore extends Store<TState>, TResul
 
 export interface TestFilterEffectsOptions<TState, TStore, TResult> {
   caption: string;
-  prologue?: string[];
+  prologue?: string | string[];
   store: TStore | (() => TStore);
   filter?: (actions: Observable<TResult>) => Observable<TResult>;
   prepare?: Action[] | Observable<Action> | ((store: TStore) => (Action[] | Observable<Action>));
@@ -63,6 +63,10 @@ export const testEffects =
       timeout = 200,
       count = -1,
     } = options;
+
+    const thePrologue = typeof prologue === "string"
+      ? [prologue]
+      : prologue;
 
     const theStore = typeof store === "function"
       ? store()
@@ -96,12 +100,12 @@ export const testEffects =
     };
 
     const describeTests = (prologueIndex: number) => {
-      if (prologueIndex >= prologue.length) {
+      if (prologueIndex >= thePrologue.length) {
         executeTest();
       } else {
-        describe(prologue[prologueIndex], () => {
+        describe(thePrologue[prologueIndex], () => {
           describeTests(prologueIndex + 1);
-        }); //   prologue[prologueIndex]
+        }); //   thePrologue[prologueIndex]
       }
     };
 
