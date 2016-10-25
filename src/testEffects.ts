@@ -4,6 +4,7 @@ import "jest";
 require("babel-core/register");
 require("babel-polyfill");
 import { Observable } from "rxjs/Observable";
+import { queue } from "rxjs/scheduler/queue";
 import "rxjs/add/observable/empty";
 import "rxjs/add/observable/of";
 import "rxjs/add/operator/catch";
@@ -47,7 +48,7 @@ export const testUpdateEffects =
               ? actionsToObservable(events(store))
               : actionsToObservable(events);
             const promise = store.update$
-              .timeout(timeout)
+              .timeout(timeout, undefined, queue)
               .catch(err => Observable.empty<StateUpdate<TState>>())
               .takeLast(count)
               .toArray()
@@ -83,7 +84,7 @@ export const testActionEffects =
               ? actionsToObservable(events(store))
               : actionsToObservable(events);
             const promise = store.action$
-              .timeout(timeout)
+              .timeout(timeout, undefined, queue)
               .catch(err => Observable.empty<Action>())
               .takeLast(count)
               .toArray()
@@ -119,7 +120,7 @@ export const testStateEffects =
               ? actionsToObservable(events(store))
               : actionsToObservable(events);
             const promise = store.state$
-              .timeout(timeout)
+              .timeout(timeout, undefined, queue)
               .catch(err => Observable.empty<TState>())
               .takeLast(count)
               .toArray()
@@ -155,7 +156,7 @@ export const testLastStateEffects =
               ? actionsToObservable(events(store))
               : actionsToObservable(events);
             const promise = store.state$
-              .timeout(timeout)
+              .timeout(timeout, undefined, queue)
               .catch(err => Observable.empty<TState>())
               .last()
               .toPromise() as PromiseLike<TState>;
