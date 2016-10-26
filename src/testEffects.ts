@@ -24,186 +24,186 @@ import "rxjs/add/operator/toPromise";
 import { reassign, Store, Action, StoreActions, StateUpdate, startEffects } from "rxstore";
 import * as deepEqual from "deep-equal";
 
-export interface TestEffectsOptions<TState, TStore extends Store<TState>, TResult> {
-  caption: string;
-  prologue?: string | string[];
-  store: TStore | (() => TStore);
-  assess: Observable<TResult> | ((store: TStore) => Observable<TResult>);
-  prepare?: Action[] | Observable<Action> | ((store: TStore) => (Action[] | Observable<Action>));
-  expectations: (items: TResult[]) => void;
-  timeout?: number;
-  count?: number;
-};
+// export interface TestEffectsOptions<TState, TStore extends Store<TState>, TResult> {
+//   caption: string;
+//   prologue?: string | string[];
+//   store: TStore | (() => TStore);
+//   assess: Observable<TResult> | ((store: TStore) => Observable<TResult>);
+//   prepare?: Action[] | Observable<Action> | ((store: TStore) => (Action[] | Observable<Action>));
+//   expectations: (items: TResult[]) => void;
+//   timeout?: number;
+//   count?: number;
+// };
 
-export interface TestFilterEffectsOptions<TState, TStore, TResult> {
-  caption: string;
-  prologue?: string | string[];
-  store: TStore | (() => TStore);
-  filter?: (actions: Observable<TResult>) => Observable<TResult>;
-  prepare?: Action[] | Observable<Action> | ((store: TStore) => (Action[] | Observable<Action>));
-  expectations: (items: TResult[]) => void;
-  timeout?: number;
-  count?: number;
-};
+// export interface TestFilterEffectsOptions<TState, TStore, TResult> {
+//   caption: string;
+//   prologue?: string | string[];
+//   store: TStore | (() => TStore);
+//   filter?: (actions: Observable<TResult>) => Observable<TResult>;
+//   prepare?: Action[] | Observable<Action> | ((store: TStore) => (Action[] | Observable<Action>));
+//   expectations: (items: TResult[]) => void;
+//   timeout?: number;
+//   count?: number;
+// };
 
 const actionsToObservable = (acts: Action[] | Observable<Action>) =>
   Array.isArray(acts) ? Observable.of(...acts) : acts;
 
-export const testEffects =
-  <TState, TStore extends Store<TState>, TResult>(
-    options: TestEffectsOptions<TState, TStore, TResult>
-  ) => {
-    const {
-      caption,
-      prologue = [],
-      store,
-      assess,
-      prepare = [],
-      expectations,
-      timeout = 200,
-      count = -1,
-    } = options;
+// export const testEffects =
+//   <TState, TStore extends Store<TState>, TResult>(
+//     options: TestEffectsOptions<TState, TStore, TResult>
+//   ) => {
+//     const {
+//       caption,
+//       prologue = [],
+//       store,
+//       assess,
+//       prepare = [],
+//       expectations,
+//       timeout = 200,
+//       count = -1,
+//     } = options;
 
-    const thePrologue = typeof prologue === "string"
-      ? [prologue]
-      : prologue;
+//     const thePrologue = typeof prologue === "string"
+//       ? [prologue]
+//       : prologue;
 
-    const theStore = typeof store === "function"
-      ? store()
-      : store;
+//     const theStore = typeof store === "function"
+//       ? store()
+//       : store;
 
-    const assess$ = typeof assess === "function"
-      ? assess(theStore)
-      : assess;
+//     const assess$ = typeof assess === "function"
+//       ? assess(theStore)
+//       : assess;
 
-    const prepare$ = typeof prepare === "function"
-      ? actionsToObservable(prepare(theStore))
-      : actionsToObservable(prepare);
+//     const prepare$ = typeof prepare === "function"
+//       ? actionsToObservable(prepare(theStore))
+//       : actionsToObservable(prepare);
 
-    const timeLimited$ = timeout >= 0
-      ? assess$.takeUntil(Observable.interval(timeout).first())
-      : assess$;
+//     const timeLimited$ = timeout >= 0
+//       ? assess$.takeUntil(Observable.interval(timeout).first())
+//       : assess$;
 
-    const countLimited$ = count > 0
-      ? timeLimited$.takeLast(count)
-      : timeLimited$;
+//     const countLimited$ = count > 0
+//       ? timeLimited$.takeLast(count)
+//       : timeLimited$;
 
-    const executeTest = () => {
-      it(caption,
-        () => {
-          startEffects(theStore.dispatch, prepare$);
-          return countLimited$
-            .toArray()
-            .toPromise()
-            .then(expectations);
-        });
-    };
+//     const executeTest = () => {
+//       it(caption,
+//         () => {
+//           startEffects(theStore.dispatch, prepare$);
+//           return countLimited$
+//             .toArray()
+//             .toPromise()
+//             .then(expectations);
+//         });
+//     };
 
-    const describeTests = (prologueIndex: number) => {
-      if (prologueIndex >= thePrologue.length) {
-        executeTest();
-      } else {
-        describe(thePrologue[prologueIndex], () => {
-          describeTests(prologueIndex + 1);
-        }); //   thePrologue[prologueIndex]
-      }
-    };
+//     const describeTests = (prologueIndex: number) => {
+//       if (prologueIndex >= thePrologue.length) {
+//         executeTest();
+//       } else {
+//         describe(thePrologue[prologueIndex], () => {
+//           describeTests(prologueIndex + 1);
+//         }); //   thePrologue[prologueIndex]
+//       }
+//     };
 
-    describeTests(0);
-  };
+//     describeTests(0);
+//   };
 
-export const testEffectsOnActions =
-  <TState, TStore extends Store<TState>>(
-    options: TestFilterEffectsOptions<TState, TStore, Action>
-  ) => {
-    const {
-      caption,
-      prologue,
-      store,
-      filter = ((a: Observable<Action>) => a),
-      prepare,
-      expectations,
-      timeout,
-      count,
-    } = options;
+// export const testEffectsOnActions =
+//   <TState, TStore extends Store<TState>>(
+//     options: TestFilterEffectsOptions<TState, TStore, Action>
+//   ) => {
+//     const {
+//       caption,
+//       prologue,
+//       store,
+//       filter = ((a: Observable<Action>) => a),
+//       prepare,
+//       expectations,
+//       timeout,
+//       count,
+//     } = options;
 
-    const assess = (s: TStore) => filter(s.action$);
+//     const assess = (s: TStore) => filter(s.action$);
 
-    const opts: TestEffectsOptions<TState, TStore, Action> = {
-      caption,
-      prologue,
-      store,
-      assess,
-      prepare,
-      expectations,
-      timeout,
-      count,
-    };
+//     const opts: TestEffectsOptions<TState, TStore, Action> = {
+//       caption,
+//       prologue,
+//       store,
+//       assess,
+//       prepare,
+//       expectations,
+//       timeout,
+//       count,
+//     };
 
-    testEffects(opts);
-  };
+//     testEffects(opts);
+//   };
 
-export const testEffectsOnStates =
-  <TState, TStore extends Store<TState>>(
-    options: TestFilterEffectsOptions<TState, TStore, TState>
-  ) => {
-    const {
-      caption,
-      prologue,
-      store,
-      filter = ((a: Observable<TState>) => a),
-      prepare,
-      expectations,
-      timeout,
-      count,
-    } = options;
+// export const testEffectsOnStates =
+//   <TState, TStore extends Store<TState>>(
+//     options: TestFilterEffectsOptions<TState, TStore, TState>
+//   ) => {
+//     const {
+//       caption,
+//       prologue,
+//       store,
+//       filter = ((a: Observable<TState>) => a),
+//       prepare,
+//       expectations,
+//       timeout,
+//       count,
+//     } = options;
 
-    const assess = (s: TStore) => filter(s.state$);
+//     const assess = (s: TStore) => filter(s.state$);
 
-    const opts: TestEffectsOptions<TState, TStore, TState> = {
-      caption,
-      prologue,
-      store,
-      assess,
-      prepare,
-      expectations,
-      timeout,
-      count,
-    };
+//     const opts: TestEffectsOptions<TState, TStore, TState> = {
+//       caption,
+//       prologue,
+//       store,
+//       assess,
+//       prepare,
+//       expectations,
+//       timeout,
+//       count,
+//     };
 
-    testEffects(opts);
-  };
+//     testEffects(opts);
+//   };
 
-export const testEffectsOnUpdates =
-  <TState, TStore extends Store<TState>>(
-    options: TestFilterEffectsOptions<TState, TStore, StateUpdate<TState>>
-  ) => {
-    const {
-      caption,
-      prologue,
-      store,
-      filter = ((a: Observable<StateUpdate<TState>>) => a),
-      prepare,
-      expectations,
-      timeout,
-      count,
-    } = options;
+// export const testEffectsOnUpdates =
+//   <TState, TStore extends Store<TState>>(
+//     options: TestFilterEffectsOptions<TState, TStore, StateUpdate<TState>>
+//   ) => {
+//     const {
+//       caption,
+//       prologue,
+//       store,
+//       filter = ((a: Observable<StateUpdate<TState>>) => a),
+//       prepare,
+//       expectations,
+//       timeout,
+//       count,
+//     } = options;
 
-    const assess = (s: TStore) => filter(s.update$);
+//     const assess = (s: TStore) => filter(s.update$);
 
-    const opts: TestEffectsOptions<TState, TStore, StateUpdate<TState>> = {
-      caption,
-      prologue,
-      store,
-      assess,
-      prepare,
-      expectations,
-      timeout,
-      count,
-    };
+//     const opts: TestEffectsOptions<TState, TStore, StateUpdate<TState>> = {
+//       caption,
+//       prologue,
+//       store,
+//       assess,
+//       prepare,
+//       expectations,
+//       timeout,
+//       count,
+//     };
 
-    testEffects(opts);
-  };
+//     testEffects(opts);
+//   };
 
 export const testUpdateEffects =
   <TState, TStore extends Store<TState>>(
